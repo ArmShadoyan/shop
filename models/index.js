@@ -1,5 +1,6 @@
 let Sequelize = require('sequelize');
 
+
 let {
     database,
     username,
@@ -9,10 +10,13 @@ let {
 } = require("../config").db;
 
 let sequelize = new Sequelize(database, username, password, {
+    
     host,
     dialect,
     logging: false
 });
+
+let User = require("./tables/users")(sequelize);
 
 function init(next) {
 
@@ -22,7 +26,8 @@ function init(next) {
             console.log('Connection has been established successfully.');
 
             sequelize.sync({
-                    // alter: true
+                    alter: true,
+                    // force:true
                 })
                 .then(() => {
                     console.log('sync ended');
@@ -51,4 +56,5 @@ module.exports = {
     init,
     Op: Sequelize.Op,
     Sequelize,
+    User
 }

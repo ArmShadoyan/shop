@@ -7,8 +7,8 @@ module.exports = {
     db: {
         host: process.env.DB_HOST || "localhost",
         username: process.env.DB_USER || "root",
-        password: process.env.DB_PASS || "",
-        database: process.env.DB_NAME || "app",
+        password: process.env.DB_PASS || "codifyer_database",
+        database: process.env.DB_NAME || "db_my_shop_93",
         dialect: process.env.DB_DIALECT || "mysql"
     },
     JWT: {
