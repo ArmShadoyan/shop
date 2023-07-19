@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-let {createUser, login, deleteUser} = require("../controllers/users")
+let {createUser, login, getUserInfo } = require("../controllers/users");
+const { validateToken, verifyToken } = require('../utils');
 
 router.post("/registration",createUser);
 router.post("/login",login);
-router.post("/deleteUser",deleteUser)
+router.get("/mi",verifyToken, getUserInfo);
+// router.post("/deleteUser",deleteUser)
 
 module.exports = router;
