@@ -6,23 +6,21 @@ async function generateHash(password) {
     return bcrypt.hash(password, bcrypt.genSaltSync(8));
 }
 
-async function validPassword(password,hashedPassword) {
+async function compareHash(password,hashedPassword) {
     return bcrypt.compare(password, hashedPassword);
 }
 
-async function validSchema(schema,body) {
+async function validateSchema(schema,body) {
     const result = schema.validate(body);
     return result;
 }
 
 async function verifyToken(req,res,next){
     try{
-        console.log(req.headers);
         const token = req.headers.authorization;
         const decoded = jwt.verify(token,"secret");
         const id = decoded.id;
-        req.body.id = id;
-        console.log(decoded);
+        req.user = decoded;
         next();
     }catch(e){
         res.status(403).send("message:Forbidden")
@@ -30,9 +28,15 @@ async function verifyToken(req,res,next){
     }
 }
 
+async function signToken(id,key) {
+    const token = jwt.sign({ "id":id },key);
+    return token;
+}
+
 module.exports = {
     generateHash,
-    validPassword,
-    validSchema,
-    verifyToken
+    compareHash,
+    validateSchema,
+    verifyToken,
+    signToken
 }

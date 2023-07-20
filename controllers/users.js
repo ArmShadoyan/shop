@@ -1,13 +1,13 @@
-const jwt = require("jsonwebtoken")
-const { User } = require("../models");
-const { generateHash, validPassword, validSchema } = require("../utils");
+const { User, Order } = require("../models");
+const { generateHash, compareHash, validateSchema, signToken } = require("../utils");
 const { userSchema } = require("../validators/users");
 
 async function createUser (req,res) {
     try{
+
         const params = req.body;
 
-        const result = await validSchema(userSchema,params);
+        const result = await validateSchema(userSchema,params);
         const { value, error } = result;
         
         if(error){
@@ -25,7 +25,7 @@ async function createUser (req,res) {
             });
     
             if(!isContains){
-                password = await generateHash(password);
+                password = await generateHash(password); 
         
                 const user = await User.create({
                     firstName:firstName,
@@ -58,10 +58,10 @@ async function login (req,res){
             return;
         }
 
-        const auth = await validPassword(loggedUser.password,findedUser.password);
+        const auth = await compareHash(loggedUser.password,findedUser.password);
         
         if(auth){
-            const token = jwt.sign({ "id":findedUser.id },"secret");
+            const token = await signToken(findedUser.id,"secret");
 
             res.status(200).send(token);
         }else{
@@ -74,9 +74,13 @@ async function login (req,res){
 }
 
 async function getUserInfo (req,res) {
-    const id = req.body.id;
+    const id = req.user.id;
+
     const user = await User.findOne({
-       where:{id:id} 
+       where:{id:id},
+       include: {
+         model: Order 
+       }
     })
 
     res.send(user);

@@ -3,6 +3,7 @@ const { Sequelize } = require("sequelize");
 const config = require("./config");
 const { init } = require("./models");
 const users = require("./routes/users");
+const orders = require("./routes/orders")
 
 const app = express();
 
@@ -12,7 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-app.use("/users",users)
+app.use("/users",users);
+app.use("/orders",orders)
 
 init();
 

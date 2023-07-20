@@ -16,7 +16,15 @@ let sequelize = new Sequelize(database, username, password, {
     logging: false
 });
 
-let User = require("./tables/users")(sequelize);
+const User = require("./tables/users")(sequelize);
+const Order = require("./tables/order")(sequelize); 
+
+User.hasMany(Order, {foreignKey: "user_id"});
+Order.belongsTo(User, {foreignKey: "user_id"});
+// Addresses
+
+// User uni mi qani address iranq kapvac en user_id-ov
+// amen address-y patkanum e mi hat user-i u iranq kapvac en user_id-ov
 
 function init(next) {
 
@@ -27,7 +35,7 @@ function init(next) {
 
             sequelize.sync({
                     alter: true,
-                    // force:true
+                    // force: true
                 })
                 .then(() => {
                     console.log('sync ended');
@@ -56,5 +64,6 @@ module.exports = {
     init,
     Op: Sequelize.Op,
     Sequelize,
-    User
+    User,
+    Order
 }
