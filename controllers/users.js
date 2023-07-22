@@ -4,9 +4,8 @@ const { userSchema } = require("../validators/users");
 
 async function createUser (req,res) {
     try{
-
         const params = req.body;
-
+        
         const result = await validateSchema(userSchema,params);
         const { value, error } = result;
         
@@ -39,7 +38,7 @@ async function createUser (req,res) {
                 res.status(409).send("email adress already exists");
             }
         }
-
+        
     }catch(e){
         console.log(e);
     }
@@ -47,8 +46,8 @@ async function createUser (req,res) {
 
 async function login (req,res){
     try{
-
-        const loggedUser = req.body
+        
+        const loggedUser = req.body;
         const findedUser = await User.findOne({
             where: {email:loggedUser.email}
         });
@@ -85,6 +84,7 @@ async function getUserInfo (req,res) {
 
     res.send(user);
 } 
+
 
 module.exports = {
     createUser,

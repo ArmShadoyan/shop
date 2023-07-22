@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
 
         home:{
             type:Sequelize.STRING
-        }        
+        }       
     })
 }
 

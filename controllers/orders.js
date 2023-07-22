@@ -1,7 +1,7 @@
-const { Order } = require("../models");
+const { Order, User } = require("../models");
+const order = require("../models/tables/order");
 const { validateSchema } = require("../utils");
 const orderSchema = require("../validators/orders");
-
 
 
 async function createOrder (req,res) {
@@ -43,16 +43,61 @@ async function createOrder (req,res) {
 
 }
 
-async function getOrders (req,res) {
-    // res.send(req.body)
-    const id = req.body.id;
 
-    const order = await Order.findAll()
+async function changeOrder (req,res) {
 
-    res.send(order)
+        try{
+
+            const params = req.body;
+            const order_id = params.id;
+
+            const order = await Order.findOne({ 
+                where:{id:order_id}
+            });
+
+            if(order){
+                order.update(params);
+                res.send(order);
+            }else{
+                res.send("there is no such order");
+            }
+
+        }catch(e){
+            console.log(e,"11111111");
+        }
+}
+
+
+async function deleteOrder (req,res) {
+
+  try{
+    const params = req.body;
+    const order_id = params.id;
+
+  
+    console.log(order_id);
+    await Order.destroy({
+        where:{id:order_id}
+    })
+
+  }catch(e){
+    console.log(e);
+  }
 
 }
+
+async function getOrders (req,res) {
+  
+    const order = await Order.findAll();
+
+    res.send(order);
+
+}
+
+
 module.exports = {
     createOrder,
-    getOrders
+    getOrders,
+    changeOrder,
+    deleteOrder
 }
